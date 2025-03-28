@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
+from datetime import datetime
+from typing import List
 
 # User Model
 class UserSignup(BaseModel):
@@ -46,3 +48,41 @@ class LoginActivityRequest(BaseModel):
     city: str
     country: str
     device_type: str
+
+class NoteCreate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=100)
+    content: str = Field(..., min_length=1)
+    formatted_content: Optional[str] = None
+
+
+class NoteUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    formatted_content: Optional[str] = None
+
+
+class NoteResponse(BaseModel):
+    id: str  # This will be assigned `note_id`
+    title: str
+    content: str
+    formatted_content: Optional[str] = None
+    created_at: datetime
+    expires_at: Optional[datetime] = None
+
+
+class TaskCreate(BaseModel):
+    task: str
+    group: Optional[str] = "General"
+
+class TaskUpdate(BaseModel):
+    task: str
+    group: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    thread_id: Optional[str] = None
+    model: str = "llama-3.3-70b-versatile"
+
+class ModelListResponse(BaseModel):
+    models: List[str]
