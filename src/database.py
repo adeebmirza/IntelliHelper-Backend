@@ -1,6 +1,9 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 # MongoDB Connection
 MONGO_URI = "mongodb://localhost:27017"
 client = AsyncIOMotorClient(MONGO_URI)
