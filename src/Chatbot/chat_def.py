@@ -32,7 +32,7 @@ prompt_template = ChatPromptTemplate.from_template(CUSTOM_PROMPT)
 # Function to create a new AI graph session
 def create_graph(model_name: str, thread_id: str):
     workflow = StateGraph(state_schema=MessagesState)
-    
+
     model = ChatGroq(
         api_key=api_key,
         model=model_name,
@@ -43,33 +43,26 @@ def create_graph(model_name: str, thread_id: str):
     )
 
     def call_model(state: MessagesState):
-        # Build conversation history from state
         history = ""
-        for msg in state["messages"][:-1]:  # Exclude the current message
+        for msg in state["messages"][:-1]:
             if isinstance(msg, HumanMessage):
                 history += f"User: {msg.content}\n"
             elif isinstance(msg, AIMessage):
                 history += f"IntelliHelper: {msg.content}\n"
-        
-        # Get the current user message
+
         current_message = state["messages"][-1].content
-        
-        # Format the prompt with history, context (empty for now), and question
         formatted_prompt = prompt_template.format_messages(
-            history=history if history else "No previous conversation.",
-            context="",  # Add custom context here if needed
+            history=history or "No previous conversation.",
+            context="",
             question=current_message
         )
-        
-        # Invoke the model with the formatted prompt
         response = model.invoke(formatted_prompt)
         return {"messages": response}
 
     workflow.add_edge(START, "model")
     workflow.add_node("model", call_model)
-    
-    # Initialize memory
+
     memory = MemorySaver()
     memory_dict[thread_id] = memory
-    
+
     return workflow.compile(checkpointer=memory)

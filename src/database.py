@@ -5,7 +5,7 @@ import os
 
 load_dotenv()
 # MongoDB Connection
-MONGO_URI = "mongodb://localhost:27017"
+MONGO_URI = os.getenv("MONGO_URL")
 client = AsyncIOMotorClient(MONGO_URI)
 db = client["fastapi_auth"]
 users_collection = db["users"]

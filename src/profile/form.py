@@ -63,6 +63,7 @@ class NoteUpdate(BaseModel):
 
 class NoteResponse(BaseModel):
     id: str  # This will be assigned `note_id`
+    note_id: str
     title: str
     content: str
     formatted_content: Optional[str] = None

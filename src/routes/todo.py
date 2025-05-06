@@ -6,21 +6,29 @@ from src.database import get_todo_collection
 from src.profile.token_jwt import get_current_user  # Dependency to get user from JWT
 from src.profile.form import TaskCreate, TaskUpdate
 from collections import defaultdict
+from bson import ObjectId
 
 todo_router = APIRouter(prefix="/todo", tags=["To-Do"])
+
+def serialize_task(task):
+    return {
+        "_id": str(task["_id"]),
+        "task": task["task"],
+        "group": task.get("group", "General"),
+        "status": task.get("status", "pending"),
+        "user_id": str(task["user_id"]),
+    }
+
 
 @todo_router.get("/")
 async def get_tasks(todo_collection=Depends(get_todo_collection), user=Depends(get_current_user)):
     query = {"user_id": ObjectId(user["_id"])}
-
-    # Fetch all tasks
     tasks = await todo_collection.find(query).to_list(length=None)
 
-    # Group tasks by "group"
     grouped_tasks = defaultdict(list)
     for task in tasks:
-        group_name = task.get("group", "General")  # Default to "General"
-        grouped_tasks[group_name].append(task)
+        group_name = task.get("group", "General")
+        grouped_tasks[group_name].append(serialize_task(task))
 
     return {"tasks_grouped": grouped_tasks}
 
