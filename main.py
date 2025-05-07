@@ -7,6 +7,7 @@ from src.routes.notes import notes_router
 from src.routes.todo import todo_router
 from src.routes.news import news_router
 from src.routes.chat import chat_router
+from prometheus_fastapi_instrumentator import Instrumentator
 from src.routes.livebot import live_bot
 from src.routes.websearch import web_search_router
 app = FastAPI()
@@ -34,3 +35,4 @@ app.include_router(web_search_router)
 
 
 
+Instrumentator().instrument(app).expose(app)
