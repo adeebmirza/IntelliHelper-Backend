@@ -163,3 +163,5 @@ yarl==1.19.0
 zipp==3.21.0
 zstandard==0.23.0
 prometheus-fastapi-instrumentator==7.1.0
+PyMuPDF==1.25.5
+python-docx==1.1.2

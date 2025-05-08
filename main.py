@@ -10,6 +10,7 @@ from src.routes.chat import chat_router
 from prometheus_fastapi_instrumentator import Instrumentator
 from src.routes.livebot import live_bot
 from src.routes.websearch import web_search_router
+from src.routes.resume import resume_router
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
@@ -32,6 +33,7 @@ app.include_router(news_router)
 app.include_router(chat_router)
 app.include_router(live_bot)
 app.include_router(web_search_router)
+app.include_router(resume_router)
 
 
 
